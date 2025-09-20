@@ -1,13 +1,24 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, FieldArray } from "formik";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 
 export default function UserDataForm() {
+  const [savedData, setSavedData] = useState<any>(null);
+
+  useEffect(() => {
+    const data = localStorage.getItem("multiStepForm");
+    if (data) setSavedData(JSON.parse(data));
+  }, []);
   return (
     <Formik
-      initialValues={{ firstName: "", lastName: "", addresses: [""] }}
+      enableReinitialize
+      initialValues={{
+        firstName: savedData?.firstName || "",
+        lastName: savedData?.lastName || "",
+        addresses: savedData?.addresses || [""],
+      }}
       validate={(values) => {
         const errors: any = {};
 
@@ -25,96 +36,104 @@ export default function UserDataForm() {
           const addrErrors = values.addresses.map((addr) => {
             if (!addr) return "آدرس الزامی است";
             if (addr.length < 5) return "آدرس باید حداقل ۵ کاراکتر باشد";
-            return "";
+            return undefined;
           });
-          errors.addresses = addrErrors;
+          if (addrErrors.some((e) => e)) {
+            errors.addresses = addrErrors;
+          }
         }
 
         return errors;
       }}
       onSubmit={(values) => {
-        console.log("فرم ارسال شد:", values);
+        console.log(values);
+        localStorage.setItem("multiStepForm", JSON.stringify(values));
       }}
     >
-      {({ values, errors, touched }) => (
-        <Form className="min-w-md max-w-lg mx-auto p-6 border-1 rounded-lg shadow-md space-y-6">
-          {/* نام */}
-          <div className="flex flex-col gap-1">
-            <label className="font-medium">نام</label>
-            <Field name="firstName">
-              {({ field }: any) => (
-                <Input {...field} placeholder="نام" className="w-full" />
+      {({ values, errors, touched }) => {
+        console.log(errors);
+        return (
+          <Form className="min-w-md max-w-lg mx-auto p-6 rounded-lg border border-white/20 bg-white/5 backdrop-blur-md shadow-lg space-y-6">
+            <div className="flex flex-col gap-1">
+              <label className="font-medium">نام</label>
+              <Field name="firstName">
+                {({ field }: any) => (
+                  <Input {...field} placeholder="نام" className="w-full" />
+                )}
+              </Field>
+              {errors.firstName && touched.firstName && (
+                <p className="text-red-500 text-sm">{errors.firstName}</p>
               )}
-            </Field>
-            {errors.firstName && touched.firstName && (
-              <p className="text-red-500 text-sm">{errors.firstName}</p>
-            )}
-          </div>
+            </div>
 
-          {/* نام خانوادگی */}
-          <div className="flex flex-col gap-1">
-            <label className="font-medium">نام خانوادگی</label>
-            <Field name="lastName">
-              {({ field }: any) => (
-                <Input
-                  {...field}
-                  placeholder="نام خانوادگی"
-                  className="w-full"
-                />
+            <div className="flex flex-col gap-1">
+              <label className="font-medium">نام خانوادگی</label>
+              <Field name="lastName">
+                {({ field }: any) => (
+                  <Input
+                    {...field}
+                    placeholder="نام خانوادگی"
+                    className="w-full"
+                  />
+                )}
+              </Field>
+              {errors.lastName && touched.lastName && (
+                <p className="text-red-500 text-sm">{errors.lastName}</p>
               )}
-            </Field>
-            {errors.lastName && touched.lastName && (
-              <p className="text-red-500 text-sm">{errors.lastName}</p>
-            )}
-          </div>
+            </div>
 
-          {/* آدرس‌های پویا */}
-          <div className="flex flex-col gap-2">
-            <label className="font-medium">آدرس‌ها</label>
-            <FieldArray name="addresses">
-              {({ push, remove }) => (
-                <div className="flex flex-col gap-2">
-                  {values.addresses.map((addr, i) => (
-                    <div key={i} className="flex gap-2 items-start">
-                      <Field name={`addresses.${i}`}>
-                        {({ field }: any) => (
-                          <Input
-                            {...field}
-                            placeholder={`آدرس ${i + 1}`}
-                            className="flex-1"
-                          />
-                        )}
-                      </Field>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => remove(i)}
-                      >
-                        حذف
-                      </Button>
-                      {errors.addresses &&
-                        errors.addresses[i] &&
-                        touched.addresses &&
-                        touched.addresses[i] && (
-                          <p className="text-red-500 text-sm mt-1">
-                            {errors.addresses[i]}
-                          </p>
-                        )}
-                    </div>
-                  ))}
-                  <Button variant="outline" onClick={() => push("")}>
-                    افزودن آدرس
-                  </Button>
-                </div>
-              )}
-            </FieldArray>
-          </div>
+            <div className="flex flex-col gap-2">
+              <label className="font-medium">آدرس‌ها</label>
+              <FieldArray name="addresses">
+                {({ push, remove }) => (
+                  <div className="flex flex-col gap-2">
+                    {values.addresses.map((addr, i) => (
+                      <div key={i} className="flex gap-2 items-start">
+                        <Field name={`addresses.${i}`}>
+                          {({ field }: any) => (
+                            <Input
+                              {...field}
+                              placeholder={`آدرس ${i + 1}`}
+                              className="flex-1"
+                            />
+                          )}
+                        </Field>
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => remove(i)}
+                        >
+                          حذف
+                        </Button>
+                        {errors.addresses &&
+                          errors.addresses[i] &&
+                          touched.addresses &&
+                          touched.addresses[i] && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors.addresses[i]}
+                            </p>
+                          )}
+                      </div>
+                    ))}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => push("")}
+                    >
+                      افزودن آدرس
+                    </Button>
+                  </div>
+                )}
+              </FieldArray>
+            </div>
 
-          <Button type="submit" className="w-full">
-            ثبت
-          </Button>
-        </Form>
-      )}
+            <Button type="submit" className="w-full">
+              ثبت
+            </Button>
+          </Form>
+        );
+      }}
     </Formik>
   );
 }
