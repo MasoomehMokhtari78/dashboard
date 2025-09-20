@@ -4,7 +4,7 @@ import { Formik, Form, Field, FieldArray } from "formik";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 
-export default function UserDataForm() {
+export default function UserDataForm({ onNext }: { onNext: () => void }) {
   const [savedData, setSavedData] = useState<any>(null);
 
   useEffect(() => {
@@ -46,14 +46,14 @@ export default function UserDataForm() {
         return errors;
       }}
       onSubmit={(values) => {
-        console.log(values);
         localStorage.setItem("multiStepForm", JSON.stringify(values));
+        onNext();
       }}
     >
       {({ values, errors, touched }) => {
         console.log(errors);
         return (
-          <Form className="min-w-md max-w-lg mx-auto p-6 rounded-lg border border-white/20 bg-white/5 backdrop-blur-md shadow-lg space-y-6">
+          <Form className="min-w-md max-w-lg mx-auto p-6 border-1 rounded-lg shadow-md space-y-6">
             <div className="flex flex-col gap-1">
               <label className="font-medium">نام</label>
               <Field name="firstName">
