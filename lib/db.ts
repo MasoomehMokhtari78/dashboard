@@ -1,33 +1,50 @@
+const DB_NAME = "dashboardDB";
+const DB_VERSION = 1;
+
 export async function openDB() {
   return new Promise<IDBDatabase>((resolve, reject) => {
-    const request = indexedDB.open("dashboardDB", 1);
-    request.onupgradeneeded = (e) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+    request.onupgradeneeded = () => {
       const db = request.result;
       if (!db.objectStoreNames.contains("transactions")) {
         db.createObjectStore("transactions");
       }
+      if (!db.objectStoreNames.contains("users")) {
+        db.createObjectStore("users");
+      }
+      if (!db.objectStoreNames.contains("systemReports")) {
+        db.createObjectStore("systemReports");
+      }
     };
+
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
   });
 }
 
-export async function getCachedData(key: string) {
+export type StoreName = "transactions" | "users" | "systemReports";
+
+export async function getCachedData(storeName: StoreName, key: string) {
   const db = await openDB();
   return new Promise<any>((resolve, reject) => {
-    const tx = db.transaction("transactions", "readonly");
-    const store = tx.objectStore("transactions");
+    const tx = db.transaction(storeName, "readonly");
+    const store = tx.objectStore(storeName);
     const req = store.get(key);
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
   });
 }
 
-export async function setCachedData(key: string, data: any) {
+export async function setCachedData(
+  storeName: StoreName,
+  key: string,
+  data: any
+) {
   const db = await openDB();
   return new Promise<void>((resolve, reject) => {
-    const tx = db.transaction("transactions", "readwrite");
-    const store = tx.objectStore("transactions");
+    const tx = db.transaction(storeName, "readwrite");
+    const store = tx.objectStore(storeName);
     store.put({ data, timestamp: Date.now() }, key);
     tx.oncomplete = () => resolve();
     tx.onerror = () => reject(tx.error);
