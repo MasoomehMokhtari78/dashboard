@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import TransactionsCharts from "./TransactionChart";
 import { addDays, format, isAfter, subDays } from "date-fns";
 import { getCachedData, setCachedData } from "@/lib/db";
 import { Button } from "@/components/ui/Button";
@@ -14,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/Select";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { TransactionType } from "@/types";
+import UsersCharts from "./UsersChart";
 
 type StepType = "week" | "month" | "year";
 
@@ -24,42 +23,45 @@ const stepDurations: Record<StepType, number> = {
   year: 365,
 };
 
-export const Transactions = () => {
+type UserStatus = "active" | "pending" | "inactive" | "suspended";
+type UserData = {
+  date: string;
+  status: UserStatus;
+  id: string;
+  name: string;
+};
+
+export const Users = () => {
   const today = useMemo(() => new Date(), []);
-  const [mode, setMode] = useState<"total" | "max">("total");
   const [step, setStep] = useState<StepType>("month");
   const [duration, setDuration] = useState(stepDurations["month"]);
   const [startDate, setStartDate] = useState(
     format(subDays(today, stepDurations["month"]), "yyyy-MM-dd")
   );
   const [endDate, setEndDate] = useState(format(today, "yyyy-MM-dd"));
-  const [transactions, setTransactions] = useState<TransactionType>([]);
+  const [users, setUsers] = useState<UserData[]>([]);
+  const [statusFilter, setStatusFilter] = useState<UserStatus | "all">("all");
 
   const processData = (
-    rawData: Record<string, { type: string; amount: number }[]>
-  ) => {
-    return Object.entries(rawData).map(([date, info]) => {
-      const types = info.map((t) => t.type);
-      const total = info.reduce((sum, t) => sum + t.amount, 0);
-      const max = Math.max(...info.map((t) => t.amount));
-      return { date, types, total, max };
-    });
+    rawData: Record<string, { id: string; name: string; status: UserStatus }[]>
+  ): UserData[] => {
+    return Object.entries(rawData).flatMap(([date, list]) =>
+      list.map((u) => ({ ...u, date }))
+    );
   };
 
   const fetchData = useCallback(
     async (start = startDate, end = endDate) => {
-      const cacheKey = `transactions_${start}_${end}`;
-      const cached = await getCachedData("transactions", cacheKey);
+      const cacheKey = `users_${start}_${end}`;
+      const cached = await getCachedData("users", cacheKey);
       if (cached) {
-        setTransactions(cached.data);
+        setUsers(cached.data);
       } else {
-        const response = await fetch(
-          `/api/transactions?start=${start}&end=${end}`
-        );
+        const response = await fetch(`/api/users?start=${start}&end=${end}`);
         const rawData = await response.json();
         const processed = processData(rawData);
-        setTransactions(processed);
-        await setCachedData("transactions", cacheKey, processed);
+        setUsers(processed);
+        await setCachedData("users", cacheKey, processed);
       }
     },
     [startDate, endDate]
@@ -107,20 +109,25 @@ export const Transactions = () => {
 
   return (
     <div className="flex flex-col items-center justify-center p-6 gap-6">
-      <h1 className="text-2xl font-bold">Transactions Dashboard</h1>
+      <h1 className="text-2xl font-bold">Users Dashboard</h1>
+
       <div className="flex gap-2 items-center">
         <Select
-          value={mode}
-          onValueChange={(val) => setMode(val as "total" | "max")}
+          value={statusFilter}
+          onValueChange={(val) => setStatusFilter(val as UserStatus | "all")}
         >
-          <SelectTrigger className="w-[120px]">
-            <SelectValue placeholder="Mode" />
+          <SelectTrigger className="w-[140px]">
+            <SelectValue placeholder="Filter by Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="total">Total</SelectItem>
-            <SelectItem value="max">Max</SelectItem>
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="active">Active</SelectItem>
+            <SelectItem value="pending">Pending</SelectItem>
+            <SelectItem value="inactive">Inactive</SelectItem>
+            <SelectItem value="suspended">Suspended</SelectItem>
           </SelectContent>
         </Select>
+
         <Select value={step} onValueChange={(val) => setStep(val as StepType)}>
           <SelectTrigger className="w-[120px]">
             <SelectValue />
@@ -163,7 +170,7 @@ export const Transactions = () => {
         <Button onClick={() => fetchData(startDate, endDate)}>Fetch</Button>
       </div>
 
-      <TransactionsCharts transactions={transactions} mode={mode} />
+      <UsersCharts users={users} status={statusFilter} />
     </div>
   );
 };

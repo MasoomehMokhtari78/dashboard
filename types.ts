@@ -4,3 +4,12 @@ export type TransactionType = {
   total: number;
   max: number;
 }[];
+
+export type UserStatus = "active" | "pending" | "inactive" | "suspended";
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  status: UserStatus;
+  createdAt: string;
+};
