@@ -3,11 +3,19 @@ import React from "react";
 import { Formik, Form, Field, FieldArray } from "formik";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
+import { useMultiStepForm } from "./Context/FormContext";
 
 export default function UserDataForm() {
+  const { data, setFields, nextStep } = useMultiStepForm();
+
   return (
     <Formik
-      initialValues={{ firstName: "", lastName: "", addresses: [""] }}
+      enableReinitialize
+      initialValues={{
+        firstName: data.firstName,
+        lastName: data.lastName,
+        addresses: data.addresses,
+      }}
       validate={(values) => {
         const errors: any = {};
 
@@ -25,20 +33,24 @@ export default function UserDataForm() {
           const addrErrors = values.addresses.map((addr) => {
             if (!addr) return "آدرس الزامی است";
             if (addr.length < 5) return "آدرس باید حداقل ۵ کاراکتر باشد";
-            return "";
+            return undefined;
           });
-          errors.addresses = addrErrors;
+          if (addrErrors.some((e) => e)) errors.addresses = addrErrors;
         }
 
         return errors;
       }}
       onSubmit={(values) => {
-        console.log("فرم ارسال شد:", values);
+        setFields({
+          firstName: values.firstName,
+          lastName: values.lastName,
+          addresses: values.addresses,
+        });
+        nextStep();
       }}
     >
       {({ values, errors, touched }) => (
-        <Form className="min-w-md max-w-lg mx-auto p-6 border-1 rounded-lg shadow-md space-y-6">
-          {/* نام */}
+        <Form className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <label className="font-medium">نام</label>
             <Field name="firstName">
@@ -51,7 +63,6 @@ export default function UserDataForm() {
             )}
           </div>
 
-          {/* نام خانوادگی */}
           <div className="flex flex-col gap-1">
             <label className="font-medium">نام خانوادگی</label>
             <Field name="lastName">
@@ -68,7 +79,6 @@ export default function UserDataForm() {
             )}
           </div>
 
-          {/* آدرس‌های پویا */}
           <div className="flex flex-col gap-2">
             <label className="font-medium">آدرس‌ها</label>
             <FieldArray name="addresses">
@@ -86,6 +96,7 @@ export default function UserDataForm() {
                         )}
                       </Field>
                       <Button
+                        type="button"
                         variant="destructive"
                         size="sm"
                         onClick={() => remove(i)}
@@ -102,7 +113,11 @@ export default function UserDataForm() {
                         )}
                     </div>
                   ))}
-                  <Button variant="outline" onClick={() => push("")}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => push("")}
+                  >
                     افزودن آدرس
                   </Button>
                 </div>
@@ -111,7 +126,7 @@ export default function UserDataForm() {
           </div>
 
           <Button type="submit" className="w-full">
-            ثبت
+            ثبت و مرحله بعد
           </Button>
         </Form>
       )}
