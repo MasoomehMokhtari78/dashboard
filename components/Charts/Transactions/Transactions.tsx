@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import TransactionsCharts from "./TransactionChart";
 import { addDays, format, isAfter, subDays } from "date-fns";
 import { getCachedData, setCachedData } from "@/lib/db";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import Image from "next/image";
 import {
   Select,
   SelectContent,
@@ -15,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/Select";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { TransactionType } from "@/types";
 
 type StepType = "week" | "month" | "year";
 
@@ -25,50 +25,66 @@ const stepDurations: Record<StepType, number> = {
 };
 
 export const Transactions = () => {
-  const today = new Date();
+  const today = useMemo(() => new Date(), []);
+  const [mode, setMode] = useState<"total" | "max">("total");
   const [step, setStep] = useState<StepType>("month");
   const [duration, setDuration] = useState(stepDurations["month"]);
   const [startDate, setStartDate] = useState(
-    format(addDays(today, -30), "yyyy-MM-dd")
+    format(subDays(today, stepDurations["month"]), "yyyy-MM-dd")
   );
   const [endDate, setEndDate] = useState(format(today, "yyyy-MM-dd"));
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<TransactionType>([]);
 
-  const fetchData = useCallback(async (start = startDate, end = endDate) => {
-    const cacheKey = `transactions_${start}_${end}`;
-    const cached = await getCachedData(cacheKey);
-    if (cached) {
-      setTransactions(cached.data);
-    } else {
-      const response = await fetch(
-        `/api/transactions?start=${start}&end=${end}`
-      );
-      const data = await response.json();
-      setTransactions(data);
-      await setCachedData(cacheKey, data);
-    }
-  }, []);
+  const processData = (
+    rawData: Record<string, { type: string; amount: number }[]>
+  ) => {
+    return Object.entries(rawData).map(([date, info]) => {
+      const types = info.map((t) => t.type);
+      const total = info.reduce((sum, t) => sum + t.amount, 0);
+      const max = Math.max(...info.map((t) => t.amount));
+      return { date, types, total, max };
+    });
+  };
+
+  const fetchData = useCallback(
+    async (start = startDate, end = endDate) => {
+      const cacheKey = `transactions_${start}_${end}`;
+      const cached = await getCachedData(cacheKey);
+      if (cached) {
+        setTransactions(cached.data);
+      } else {
+        const response = await fetch(
+          `/api/transactions?start=${start}&end=${end}`
+        );
+        const rawData = await response.json();
+        const processed = processData(rawData);
+        setTransactions(processed);
+        await setCachedData(cacheKey, processed);
+      }
+    },
+    [startDate, endDate]
+  );
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
+  const handleDateRangeChange = useCallback(
+    (newStart: string, newEnd: string) => {
+      setStartDate(newStart);
+      setEndDate(newEnd);
+      fetchData(newStart, newEnd);
+    },
+    [fetchData]
+  );
+
   useEffect(() => {
     const newDuration = stepDurations[step];
     setDuration(newDuration);
-    setStartDate(format(subDays(today, newDuration), "yyyy-MM-dd"));
-    setEndDate(format(today, "yyyy-MM-dd"));
-    fetchData(
-      format(subDays(today, newDuration), "yyyy-MM-dd"),
-      format(today, "yyyy-MM-dd")
-    );
-  }, [step]);
-
-  const handleDateRangeChange = (newStart: string, newEnd: string) => {
-    setStartDate(newStart);
-    setEndDate(newEnd);
-    fetchData(newStart, newEnd);
-  };
+    const newStart = format(subDays(today, newDuration), "yyyy-MM-dd");
+    const newEnd = format(today, "yyyy-MM-dd");
+    handleDateRangeChange(newStart, newEnd);
+  }, [step, handleDateRangeChange, today]);
 
   const shift = (direction: "back" | "forward") => {
     const start = new Date(startDate);
@@ -92,8 +108,19 @@ export const Transactions = () => {
   return (
     <div className="flex flex-col items-center justify-center p-6 gap-6">
       <h1 className="text-2xl font-bold">Transactions Dashboard</h1>
-
       <div className="flex gap-2 items-center">
+        <Select
+          value={mode}
+          onValueChange={(val) => setMode(val as "total" | "max")}
+        >
+          <SelectTrigger className="w-[120px]">
+            <SelectValue placeholder="Mode" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="total">Total</SelectItem>
+            <SelectItem value="max">Max</SelectItem>
+          </SelectContent>
+        </Select>
         <Select value={step} onValueChange={(val) => setStep(val as StepType)}>
           <SelectTrigger className="w-[120px]">
             <SelectValue />
@@ -136,7 +163,7 @@ export const Transactions = () => {
         <Button onClick={() => fetchData(startDate, endDate)}>Fetch</Button>
       </div>
 
-      <TransactionsCharts transactions={transactions} />
+      <TransactionsCharts transactions={transactions} mode={mode} />
     </div>
   );
 };
