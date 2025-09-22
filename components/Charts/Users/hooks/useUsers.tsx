@@ -26,7 +26,7 @@ export const useUsers = () => {
   const fetchUsers = useCallback(async (start: string, end: string) => {
     const cacheKey = `users_${start}_${end}`;
     const cached = await getCachedData<{ data: UserData[] }>("users", cacheKey);
-    if (cached) {
+    if (cached?.data) {
       setUsers(cached.data);
     } else {
       const response = await fetch(`/api/users?start=${start}&end=${end}`);

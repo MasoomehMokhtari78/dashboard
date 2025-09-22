@@ -25,7 +25,7 @@ export const useTransactions = () => {
       "transactions",
       cacheKey
     );
-    if (cached) {
+    if (cached?.data) {
       setTransactions(cached.data);
     } else {
       const response = await fetch(
