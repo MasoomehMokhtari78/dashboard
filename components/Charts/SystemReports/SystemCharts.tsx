@@ -1,5 +1,6 @@
 "use client";
 
+import { SystemReport } from "@/types";
 import EChartsReactCore, { EChartsReactProps } from "echarts-for-react";
 
 const EChartsReact = EChartsReactCore as unknown as React.FC<EChartsReactProps>;
@@ -11,40 +12,50 @@ type PieColorParams = {
   value?: number;
 };
 
-type User = {
+type FilteredRequests = {
   date: string;
-  id: string;
-  name: string;
+  type: string;
   status: string;
+  count: number;
 };
 
-export default function UsersCharts({
-  users,
-  status,
+export default function SystemCharts({
+  reports,
+  statusFilter,
+  typeFilter,
 }: {
-  users: User[];
-  status: string;
+  reports: SystemReport[];
+  statusFilter: string;
+  typeFilter: string;
 }) {
-  if (!users.length) return <div>Loading...</div>;
+  if (!reports.length) return <div>Loading...</div>;
 
-  const filteredUsers =
-    status === "all" ? users : users.filter((user) => user.status === status);
+  const filtered: FilteredRequests[] = reports.flatMap((report) =>
+    report.requests
+      .filter(
+        (req) =>
+          (statusFilter === "all" || req.status === statusFilter) &&
+          (typeFilter === "all" || req.type === typeFilter)
+      )
+      .map((req) => ({ ...req, date: report.date }))
+  );
 
-  const usersByDate: Record<string, User[]> = {};
-  filteredUsers.forEach((u) => {
-    if (!usersByDate[u.date]) usersByDate[u.date] = [];
-    usersByDate[u.date].push(u);
+  const reportsByDate: Record<string, number> = {};
+  filtered.forEach((report) => {
+    reportsByDate[report.date] =
+      (reportsByDate[report.date] || 0) + report.count;
   });
 
-  const dates = Object.keys(usersByDate).sort();
-  const counts = dates.map((d) => usersByDate[d].length);
+  const dates = Object.keys(reportsByDate);
+  const counts = Object.values(reportsByDate);
 
-  const statusCounts = users.reduce<Record<string, number>>((acc, u) => {
-    acc[u.status] = (acc[u.status] || 0) + 1;
+  const pieCounts = filtered.reduce<Record<string, number>>((acc, request) => {
+    const key = `${request.type} - ${request.status}`;
+    acc[key] = (acc[key] || 0) + request.count;
     return acc;
   }, {});
 
-  const pieSeries = Object.entries(statusCounts).map(([name, value]) => ({
+  const pieSeries = Object.entries(pieCounts).map(([name, value]) => ({
     name,
     value,
   }));
@@ -56,7 +67,7 @@ export default function UsersCharts({
     dataZoom: [{ type: "slider", start: 0, end: 100, bottom: 0 }],
     series: [
       {
-        name: "Users per Day",
+        name: "Requests per Day",
         type: "bar",
         data: counts,
       },
@@ -70,7 +81,7 @@ export default function UsersCharts({
     dataZoom: [{ type: "slider", start: 0, end: 100, bottom: 0 }],
     series: [
       {
-        name: "Users per Day",
+        name: "Requests per Day",
         type: "line",
         data: counts,
       },
@@ -82,7 +93,7 @@ export default function UsersCharts({
     legend: { bottom: 0 },
     series: [
       {
-        name: "User Statuses",
+        name: "Request Type & Status",
         type: "pie",
         radius: "50%",
         data: pieSeries,
