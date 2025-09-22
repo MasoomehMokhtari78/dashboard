@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <div className="w-full h-screen">
-      <div className="flex flex-col items-center justify-center p-6 gap-6">
+      <div className="flex flex-col items-center justify-center p-6 gap-6 h-full min-h-fit">
         <h1 className="text-2xl font-bold">{title}</h1>
         {children}
       </div>
