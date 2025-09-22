@@ -1,16 +1,9 @@
 "use client";
 
-import { SystemReport } from "@/types";
+import { PieColorParams, PIECOLORS, SystemReport } from "@/types";
 import EChartsReactCore, { EChartsReactProps } from "echarts-for-react";
 
 const EChartsReact = EChartsReactCore as unknown as React.FC<EChartsReactProps>;
-
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF4444"];
-type PieColorParams = {
-  dataIndex: number;
-  name?: string;
-  value?: number;
-};
 
 type FilteredRequests = {
   date: string;
@@ -107,7 +100,7 @@ export default function SystemCharts({
         label: { formatter: "{b}: {c}" },
         itemStyle: {
           color: (params: PieColorParams) =>
-            COLORS[params.dataIndex % COLORS.length],
+            PIECOLORS[params.dataIndex % PIECOLORS.length],
         },
       },
     ],

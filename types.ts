@@ -25,3 +25,10 @@ export type SystemReport = {
     count: number;
   }[];
 };
+
+export const PIECOLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF4444"];
+export type PieColorParams = {
+  dataIndex: number;
+  name?: string;
+  value?: number;
+};
