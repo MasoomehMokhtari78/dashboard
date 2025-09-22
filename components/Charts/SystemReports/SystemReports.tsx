@@ -16,7 +16,7 @@ export const SystemReports = () => {
     filters,
   } = useReports();
   const { startDate, endDate } = toolbarOptions;
-
+  // console.log(reports);
   const chartData = useCharts({
     reports,
     statusFilter,
@@ -30,7 +30,7 @@ export const SystemReports = () => {
         fetch={() => fetchReports(startDate, endDate)}
         filters={filters}
       />
-      {reports ? (
+      {reports?.length > 0 ? (
         <Charts
           {...chartData}
           titles={{ bar: "درخواست", line: "درخواست", pie: "وضعیت درخواست" }}

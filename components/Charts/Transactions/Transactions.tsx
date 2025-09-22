@@ -33,7 +33,7 @@ export const Transactions = () => {
           },
         ]}
       />
-      {transactions?.length ? (
+      {transactions?.length > 0 ? (
         <Charts
           {...chartData}
           titles={{

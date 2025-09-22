@@ -25,7 +25,7 @@ export const useReports = () => {
       "systemReports",
       cacheKey
     );
-    if (cached) {
+    if (cached?.data) {
       setReports(cached.data);
     } else {
       const response = await fetch(
@@ -40,10 +40,9 @@ export const useReports = () => {
   const toolbarOptions = useToolbar({ fetch: fetchReports });
 
   useEffect(() => {
-    fetchReports(
-      format(new Date(), "yyyy-MM-dd"),
-      format(subDays(new Date(), -30), "yyyy-MM-dd")
-    );
+    const start = format(subDays(new Date(), 30), "yyyy-MM-dd");
+    const end = format(new Date(), "yyyy-MM-dd");
+    fetchReports(start, end);
   }, [fetchReports]);
 
   const typeOptions: FilterConfig<RequestType | "all"> = {
