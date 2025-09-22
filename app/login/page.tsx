@@ -8,6 +8,8 @@ import {
 } from "@/components/LoginForms/Context/FormContext";
 import { Button } from "@/components/ui/Button";
 import Image from "next/image";
+import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 
 const stepMap = {
   1: {
@@ -20,31 +22,74 @@ const stepMap = {
   },
   3: {
     label: "فرم با موفقیت تکلمیل شد",
-    desc: "کاربر گرامی، اطلاعات شما با موفیت ثبت شد.",
+    desc: "کاربر گرامی، اطلاعات شما با موفقیت ثبت شد.",
   },
 };
 
 function StepRenderer() {
   const { data, prevStep } = useMultiStepForm();
+
   return (
     <div className="w-full h-full flex flex-col md:flex-row">
       <div className="w-full h-full md:w-[50%] flex flex-col items-center justify-center">
         <div className="flex flex-col md:flex-1 items-center justify-center gap-6 p-6 min-w-sm max-w-md mx-auto">
-          <div className="w-full flex flex-col gap-2">
-            <p className="text-xl font-bold">{stepMap[data.step]?.label}</p>
-            <p className="opacity-70 text-sm">{stepMap[data.step]?.desc}</p>
-          </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={data.step + "-header"}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col gap-1 w-full"
+            >
+              <p className="text-xl font-bold">{stepMap[data.step]?.label}</p>
+              <p className="opacity-70 text-sm">{stepMap[data.step]?.desc}</p>
+            </motion.div>
+          </AnimatePresence>
           <div className="w-full">
-            {data.step === 1 && <UserDataForm />}
-            {data.step === 2 && <DocumentsForm />}
-            {data.step === 3 && (
-              <div className="flex flex-col gap-2">
-                <Button>ورود به داشبورد</Button>
-                <Button variant="outline" onClick={prevStep}>
-                  بازگشت به مرحله قبل
-                </Button>
-              </div>
-            )}
+            <AnimatePresence mode="wait">
+              {data.step === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -50 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <UserDataForm />
+                </motion.div>
+              )}
+
+              {data.step === 2 && (
+                <motion.div
+                  key="step2"
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -50 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <DocumentsForm />
+                </motion.div>
+              )}
+
+              {data.step === 3 && (
+                <motion.div
+                  key="step3"
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -50 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex flex-col gap-2"
+                >
+                  <Link href="/dashboard" className="w-full">
+                    <Button className="w-full">ورود به داشبورد</Button>
+                  </Link>
+                  <Button variant="outline" onClick={prevStep}>
+                    بازگشت به مرحله قبل
+                  </Button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>

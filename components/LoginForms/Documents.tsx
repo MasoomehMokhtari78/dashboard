@@ -23,11 +23,10 @@ export default function DocumentsForm() {
     >
       {({ values, setFieldValue, errors, touched }) => (
         <Form className="flex flex-col gap-4">
-          <label className="font-medium">آپلود تصویر</label>
           <Field name="userImage">
             {() => (
               <div
-                className="w-full h-40 border-2 border-dashed flex items-center justify-center cursor-pointer relative"
+                className="w-full h-40 border-2 border-dashed rounded-xl flex items-center justify-center cursor-pointer relative"
                 onClick={() => document.getElementById("fileInput")?.click()}
               >
                 {!values.userImage && (
