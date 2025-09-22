@@ -5,6 +5,7 @@ import { Toolbar } from "@/components/Toolbar/Toolbar";
 import { useUsers } from "./hooks/useUsers";
 import { Charts } from "../Charts";
 import { useUserCharts } from "./hooks/useUserCharts";
+import ChartSkeleton from "../Skeleton";
 
 export const Users = () => {
   const { users, toolbarOptions, fetchUsers, statusFilter, setStatusFilter } =
@@ -16,7 +17,7 @@ export const Users = () => {
     users,
   });
 
-  return (
+  return users?.length ? (
     <>
       <Toolbar
         {...toolbarOptions}
@@ -36,20 +37,19 @@ export const Users = () => {
           },
         ]}
       />
-      {users?.length ? (
-        <Charts
-          {...chartData}
-          titles={{ bar: "کاربر جدید", line: "کاربر جدید", pie: "وضعیت" }}
-          persianLabels={{
-            active: "فعال",
-            inactive: "غیرفعال",
-            pending: "در انتظار تایید",
-            suspended: "مسدود شده",
-          }}
-        />
-      ) : (
-        <>Loading</>
-      )}
+
+      <Charts
+        {...chartData}
+        titles={{ bar: "کاربر جدید", line: "کاربر جدید", pie: "وضعیت" }}
+        persianLabels={{
+          active: "فعال",
+          inactive: "غیرفعال",
+          pending: "در انتظار تایید",
+          suspended: "مسدود شده",
+        }}
+      />
     </>
+  ) : (
+    <ChartSkeleton />
   );
 };
