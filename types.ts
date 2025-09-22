@@ -13,3 +13,15 @@ export type User = {
   status: UserStatus;
   createdAt: string;
 };
+
+export type RequestType = "login" | "payment" | "fetchData";
+export type RequestStatus = "success" | "fail";
+
+export type SystemReport = {
+  date: string;
+  requests: {
+    type: RequestType;
+    status: RequestStatus;
+    count: number;
+  }[];
+};
