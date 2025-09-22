@@ -1,14 +1,20 @@
 "use client";
 
 import React from "react";
-import UsersCharts from "./UsersChart";
 import { Toolbar } from "@/components/Toolbar/Toolbar";
-import { useUsers } from "./useUsers";
+import { useUsers } from "./hooks/useUsers";
+import { Charts } from "../Charts";
+import { useUserCharts } from "./hooks/useUserCharts";
 
 export const Users = () => {
   const { users, toolbarOptions, fetchUsers, statusFilter, setStatusFilter } =
     useUsers();
   const { startDate, endDate } = toolbarOptions;
+
+  const chartData = useUserCharts({
+    status: statusFilter,
+    users,
+  });
 
   return (
     <>
@@ -29,7 +35,7 @@ export const Users = () => {
           },
         ]}
       />
-      <UsersCharts users={users} status={statusFilter} />
+      {users?.length ? <Charts {...chartData} /> : <>Loading</>}
     </>
   );
 };

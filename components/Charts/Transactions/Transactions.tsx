@@ -1,15 +1,21 @@
 "use client";
 
 import React from "react";
-import TransactionsCharts from "./TransactionChart";
-
-import { useTransactions } from "./useTransactions";
+import { useTransactions } from "./hooks/useTransactions";
 import { Toolbar } from "@/components/Toolbar/Toolbar";
+import { Charts } from "../Charts";
+import { useTransactionsCharts } from "./hooks/useTransactionsCharts";
 
 export const Transactions = () => {
   const { transactions, toolbarOptions, fetchTransactions, mode, setMode } =
     useTransactions();
   const { startDate, endDate } = toolbarOptions;
+
+  const chartData = useTransactionsCharts({
+    transactions,
+    mode,
+  });
+
   return (
     <>
       <Toolbar
@@ -27,8 +33,7 @@ export const Transactions = () => {
           },
         ]}
       />
-
-      <TransactionsCharts transactions={transactions} mode={mode} />
+      {transactions?.length ? <Charts {...chartData} /> : <>Loading</>}
     </>
   );
 };

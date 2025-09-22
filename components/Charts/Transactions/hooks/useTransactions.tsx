@@ -2,7 +2,7 @@ import { useToolbar } from "@/components/Toolbar/useToolbar";
 import { getCachedData, setCachedData } from "@/lib/db";
 import { TransactionType } from "@/types";
 import { format, subDays } from "date-fns";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const processData = (
   rawData: Record<string, { type: string; amount: number }[]>
@@ -19,7 +19,7 @@ export const useTransactions = () => {
   const [mode, setMode] = useState<"total" | "max">("total");
   const [transactions, setTransactions] = useState<TransactionType>([]);
 
-  const fetchTransactions = async (start: string, end: string) => {
+  const fetchTransactions = useCallback(async (start: string, end: string) => {
     const cacheKey = `transactions_${start}_${end}`;
     const cached = await getCachedData("transactions", cacheKey);
     if (cached) {
@@ -33,7 +33,7 @@ export const useTransactions = () => {
       setTransactions(processed);
       await setCachedData("transactions", cacheKey, processed);
     }
-  };
+  }, []);
   const toolbarOptions = useToolbar({ fetch: fetchTransactions });
 
   useEffect(() => {

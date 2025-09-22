@@ -1,7 +1,7 @@
 import { useToolbar } from "@/components/Toolbar/useToolbar";
 import { getCachedData, setCachedData } from "@/lib/db";
 import { format, subDays } from "date-fns";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type UserStatus = "active" | "pending" | "inactive" | "suspended";
 type UserData = {
@@ -23,7 +23,7 @@ export const useUsers = () => {
   const [users, setUsers] = useState<UserData[]>([]);
   const [statusFilter, setStatusFilter] = useState<UserStatus | "all">("all");
 
-  const fetchUsers = async (start: string, end: string) => {
+  const fetchUsers = useCallback(async (start: string, end: string) => {
     const cacheKey = `users_${start}_${end}`;
     const cached = await getCachedData("users", cacheKey);
     if (cached) {
@@ -35,7 +35,7 @@ export const useUsers = () => {
       setUsers(processed);
       await setCachedData("users", cacheKey, processed);
     }
-  };
+  }, []);
 
   const toolbarOptions = useToolbar({ fetch: fetchUsers });
 

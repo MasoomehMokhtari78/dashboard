@@ -1,36 +1,17 @@
-"use client";
+import { PieColorParams, PIECOLORS } from "@/types";
+import React from "react";
 
-import { TransactionType } from "@/types";
 import EChartsReactCore, { EChartsReactProps } from "echarts-for-react";
 
 const EChartsReact = EChartsReactCore as unknown as React.FC<EChartsReactProps>;
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
-type PieColorParams = {
-  dataIndex: number;
-  name?: string;
-  value?: number;
+type Props = {
+  pieData: Record<string, number>;
+  dates: string[];
+  counts: number[];
 };
 
-export default function TransactionsCharts({
-  transactions,
-  mode,
-}: {
-  transactions: TransactionType;
-  mode: "total" | "max";
-}) {
-  if (!transactions.length) return <div>Loading...</div>;
-
-  const dates = transactions.map((t) => t.date);
-  const amounts = transactions.map((t) => (mode === "total" ? t.total : t.max));
-
-  const pieData = transactions.reduce((acc, t) => {
-    t.types.forEach((type) => {
-      acc[type] = (acc[type] || 0) + 1;
-    });
-    return acc;
-  }, {} as Record<string, number>);
-
+export const Charts = ({ dates, counts, pieData }: Props) => {
   const pieSeries = Object.entries(pieData).map(([name, value]) => ({
     name,
     value,
@@ -43,9 +24,9 @@ export default function TransactionsCharts({
     dataZoom: [{ type: "slider", start: 0, end: 100, bottom: 0 }],
     series: [
       {
-        name: mode === "total" ? "Total Amount" : "Max Amount",
+        name: "Requests per Day",
         type: "bar",
-        data: amounts,
+        data: counts,
       },
     ],
   };
@@ -57,9 +38,9 @@ export default function TransactionsCharts({
     dataZoom: [{ type: "slider", start: 0, end: 100, bottom: 0 }],
     series: [
       {
-        name: mode === "total" ? "Total Amount" : "Max Amount",
+        name: "Requests per Day",
         type: "line",
-        data: amounts,
+        data: counts,
       },
     ],
   };
@@ -69,7 +50,7 @@ export default function TransactionsCharts({
     legend: { bottom: 0 },
     series: [
       {
-        name: "Transaction Types",
+        name: "Request Type & Status",
         type: "pie",
         radius: "50%",
         data: pieSeries,
@@ -83,7 +64,7 @@ export default function TransactionsCharts({
         label: { formatter: "{b}: {c}" },
         itemStyle: {
           color: (params: PieColorParams) =>
-            COLORS[params.dataIndex % COLORS.length],
+            PIECOLORS[params.dataIndex % PIECOLORS.length],
         },
       },
     ],
@@ -96,4 +77,4 @@ export default function TransactionsCharts({
       <EChartsReact option={pieOption} style={{ width: 400, height: 400 }} />
     </div>
   );
-}
+};

@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import SystemCharts from "./SystemCharts";
 import { Toolbar } from "@/components/Toolbar/Toolbar";
-import { useReports } from "./useReports";
+import { useReports } from "./hooks/useReports";
+import { Charts } from "../Charts";
+import { useCharts } from "./hooks/useSystemCharts";
 
 export const SystemReports = () => {
   const {
@@ -16,6 +17,12 @@ export const SystemReports = () => {
     setTypeFilter,
   } = useReports();
   const { startDate, endDate } = toolbarOptions;
+
+  const chartData = useCharts({
+    reports,
+    statusFilter,
+    typeFilter,
+  });
 
   return (
     <>
@@ -46,11 +53,7 @@ export const SystemReports = () => {
           },
         ]}
       />
-      <SystemCharts
-        reports={reports}
-        statusFilter={statusFilter}
-        typeFilter={typeFilter}
-      />
+      {reports ? <Charts {...chartData} /> : <>Loading</>}
     </>
   );
 };

@@ -1,7 +1,7 @@
 import { useToolbar } from "@/components/Toolbar/useToolbar";
 import { getCachedData, setCachedData } from "@/lib/db";
 import { format, subDays } from "date-fns";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type RequestStatus = "success" | "fail";
 type RequestType = "login" | "payment" | "fetchData";
@@ -18,7 +18,7 @@ export const useReports = () => {
   );
   const [typeFilter, setTypeFilter] = useState<RequestType | "all">("all");
 
-  const fetchReports = async (start: string, end: string) => {
+  const fetchReports = useCallback(async (start: string, end: string) => {
     const cacheKey = `reports_${start}_${end}`;
     const cached = await getCachedData("systemReports", cacheKey);
     if (cached) {
@@ -31,7 +31,7 @@ export const useReports = () => {
       setReports(data);
       await setCachedData("systemReports", cacheKey, data);
     }
-  };
+  }, []);
 
   const toolbarOptions = useToolbar({ fetch: fetchReports });
 
