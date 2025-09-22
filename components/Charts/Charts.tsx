@@ -1,61 +1,18 @@
-"use client";
+import { PieColorParams, PIECOLORS } from "@/types";
+import React from "react";
 
-import { SystemReport } from "@/types";
 import EChartsReactCore, { EChartsReactProps } from "echarts-for-react";
 
 const EChartsReact = EChartsReactCore as unknown as React.FC<EChartsReactProps>;
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF4444"];
-type PieColorParams = {
-  dataIndex: number;
-  name?: string;
-  value?: number;
+type Props = {
+  pieData: Record<string, number>;
+  dates: string[];
+  counts: number[];
 };
 
-type FilteredRequests = {
-  date: string;
-  type: string;
-  status: string;
-  count: number;
-};
-
-export default function SystemCharts({
-  reports,
-  statusFilter,
-  typeFilter,
-}: {
-  reports: SystemReport[];
-  statusFilter: string;
-  typeFilter: string;
-}) {
-  if (!reports.length) return <div>Loading...</div>;
-
-  const filtered: FilteredRequests[] = reports.flatMap((report) =>
-    report.requests
-      .filter(
-        (req) =>
-          (statusFilter === "all" || req.status === statusFilter) &&
-          (typeFilter === "all" || req.type === typeFilter)
-      )
-      .map((req) => ({ ...req, date: report.date }))
-  );
-
-  const reportsByDate: Record<string, number> = {};
-  filtered.forEach((report) => {
-    reportsByDate[report.date] =
-      (reportsByDate[report.date] || 0) + report.count;
-  });
-
-  const dates = Object.keys(reportsByDate);
-  const counts = Object.values(reportsByDate);
-
-  const pieCounts = filtered.reduce<Record<string, number>>((acc, request) => {
-    const key = `${request.type} - ${request.status}`;
-    acc[key] = (acc[key] || 0) + request.count;
-    return acc;
-  }, {});
-
-  const pieSeries = Object.entries(pieCounts).map(([name, value]) => ({
+export const Charts = ({ dates, counts, pieData }: Props) => {
+  const pieSeries = Object.entries(pieData).map(([name, value]) => ({
     name,
     value,
   }));
@@ -107,7 +64,7 @@ export default function SystemCharts({
         label: { formatter: "{b}: {c}" },
         itemStyle: {
           color: (params: PieColorParams) =>
-            COLORS[params.dataIndex % COLORS.length],
+            PIECOLORS[params.dataIndex % PIECOLORS.length],
         },
       },
     ],
@@ -120,4 +77,4 @@ export default function SystemCharts({
       <EChartsReact option={pieOption} style={{ width: 400, height: 400 }} />
     </div>
   );
-}
+};
