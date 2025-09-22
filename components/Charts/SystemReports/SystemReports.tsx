@@ -12,9 +12,8 @@ export const SystemReports = () => {
     toolbarOptions,
     fetchReports,
     statusFilter,
-    setStatusFilter,
     typeFilter,
-    setTypeFilter,
+    filters,
   } = useReports();
   const { startDate, endDate } = toolbarOptions;
 
@@ -29,29 +28,7 @@ export const SystemReports = () => {
       <Toolbar
         {...toolbarOptions}
         fetch={() => fetchReports(startDate, endDate)}
-        filters={[
-          {
-            name: "status",
-            value: statusFilter,
-            setValue: setStatusFilter,
-            options: [
-              { label: "همه", value: "all" },
-              { label: "موفق", value: "success" },
-              { label: "ناموفق", value: "fail" },
-            ],
-          },
-          {
-            name: "reportType",
-            value: typeFilter,
-            setValue: setTypeFilter,
-            options: [
-              { label: "همه", value: "all" },
-              { label: "ورود", value: "login" },
-              { label: "پرداخت", value: "payment" },
-              { label: "درخواست داده", value: "fetchData" },
-            ],
-          },
-        ]}
+        filters={filters}
       />
       {reports ? (
         <Charts

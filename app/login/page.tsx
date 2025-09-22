@@ -11,7 +11,7 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 
-const stepMap = {
+const stepMap: Record<number, { label: string; desc: string }> = {
   1: {
     label: "اطلاعات اولیه",
     desc: "خوش آمدید! لطفا برای ورود به داشبورد اطلاعات زیر را تکمیل کنید.",
