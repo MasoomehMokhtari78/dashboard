@@ -5,6 +5,7 @@ import { useTransactions } from "./hooks/useTransactions";
 import { Toolbar } from "@/components/Toolbar/Toolbar";
 import { Charts } from "../Charts";
 import { useTransactionsCharts } from "./hooks/useTransactionsCharts";
+import ChartSkeleton from "../Skeleton";
 
 export const Transactions = () => {
   const { transactions, toolbarOptions, fetchTransactions, mode, setMode } =
@@ -16,7 +17,7 @@ export const Transactions = () => {
     mode,
   });
 
-  return (
+  return transactions?.length > 0 ? (
     <>
       <Toolbar
         {...toolbarOptions}
@@ -33,23 +34,22 @@ export const Transactions = () => {
           },
         ]}
       />
-      {transactions?.length > 0 ? (
-        <Charts
-          {...chartData}
-          titles={{
-            bar: "مقدار تراکنش در روز",
-            line: "مقدار تراکنش در روز",
-            pie: "وضعیت تراکنش",
-          }}
-          persianLabels={{
-            pending: "در انتظار تایید",
-            failed: "ناموفق",
-            verified: "موفق",
-          }}
-        />
-      ) : (
-        <>Loading</>
-      )}
+
+      <Charts
+        {...chartData}
+        titles={{
+          bar: "مقدار تراکنش در روز",
+          line: "مقدار تراکنش در روز",
+          pie: "وضعیت تراکنش",
+        }}
+        persianLabels={{
+          pending: "در انتظار تایید",
+          failed: "ناموفق",
+          verified: "موفق",
+        }}
+      />
     </>
+  ) : (
+    <ChartSkeleton />
   );
 };
