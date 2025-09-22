@@ -35,9 +35,9 @@ export const SystemReports = () => {
             value: statusFilter,
             setValue: setStatusFilter,
             options: [
-              { label: "All", value: "all" },
-              { label: "Success", value: "success" },
-              { label: "Fail", value: "fail" },
+              { label: "همه", value: "all" },
+              { label: "موفق", value: "success" },
+              { label: "ناموفق", value: "fail" },
             ],
           },
           {
@@ -45,15 +45,30 @@ export const SystemReports = () => {
             value: typeFilter,
             setValue: setTypeFilter,
             options: [
-              { label: "All", value: "all" },
-              { label: "Login", value: "login" },
-              { label: "Payment", value: "payment" },
-              { label: "Fetch Data", value: "fetchData" },
+              { label: "همه", value: "all" },
+              { label: "ورود", value: "login" },
+              { label: "پرداخت", value: "payment" },
+              { label: "درخواست داده", value: "fetchData" },
             ],
           },
         ]}
       />
-      {reports ? <Charts {...chartData} /> : <>Loading</>}
+      {reports ? (
+        <Charts
+          {...chartData}
+          titles={{ bar: "درخواست", line: "درخواست", pie: "وضعیت درخواست" }}
+          persianLabels={{
+            "payment - fail": "پرداخت ناموفق",
+            "payment - success": "پرداخت موفق",
+            "login - fail": "ورود ناموفق",
+            "login - success": "ورود موفق",
+            "fetchData - fail": "درخواست داده ناموفق",
+            "fetchData - success": "درخواست داده موفق",
+          }}
+        />
+      ) : (
+        <>Loading</>
+      )}
     </>
   );
 };

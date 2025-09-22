@@ -46,7 +46,17 @@ export const MultiStepFormProvider = ({
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("multiStepFormData", JSON.stringify(data));
+    const { firstName, lastName, addresses, userImage } = data;
+
+    const isEmpty =
+      !firstName.trim() &&
+      !lastName.trim() &&
+      addresses.every((a) => !a.trim()) &&
+      !userImage;
+
+    if (!isEmpty) {
+      localStorage.setItem("multiStepFormData", JSON.stringify(data));
+    }
   }, [data]);
 
   const setField = (key: keyof FormData, value: any) => {

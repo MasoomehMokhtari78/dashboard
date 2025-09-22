@@ -9,11 +9,19 @@ type Props = {
   pieData: Record<string, number>;
   dates: string[];
   counts: number[];
+  titles?: { bar?: string; line?: string; pie?: string };
+  persianLabels?: Record<string, string>;
 };
 
-export const Charts = ({ dates, counts, pieData }: Props) => {
+export const Charts = ({
+  dates,
+  counts,
+  pieData,
+  titles,
+  persianLabels,
+}: Props) => {
   const pieSeries = Object.entries(pieData).map(([name, value]) => ({
-    name,
+    name: (persianLabels && persianLabels[name]) || name,
     value,
   }));
 
@@ -24,7 +32,7 @@ export const Charts = ({ dates, counts, pieData }: Props) => {
     dataZoom: [{ type: "slider", start: 0, end: 100, bottom: 0 }],
     series: [
       {
-        name: "Requests per Day",
+        name: titles?.bar,
         type: "bar",
         data: counts,
       },
@@ -38,7 +46,7 @@ export const Charts = ({ dates, counts, pieData }: Props) => {
     dataZoom: [{ type: "slider", start: 0, end: 100, bottom: 0 }],
     series: [
       {
-        name: "Requests per Day",
+        name: titles?.line,
         type: "line",
         data: counts,
       },
@@ -47,21 +55,27 @@ export const Charts = ({ dates, counts, pieData }: Props) => {
 
   const pieOption = {
     tooltip: { trigger: "item" },
-    legend: { bottom: 0 },
+    legend: {
+      bottom: 0,
+      textStyle: {
+        color: "#FFFFFF",
+        fontSize: 12,
+        fontWeight: "bold",
+        fontFamily: "IranSans",
+      },
+    },
     series: [
       {
-        name: "Request Type & Status",
+        name: titles?.pie,
         type: "pie",
         radius: "50%",
         data: pieSeries,
-        emphasis: {
-          itemStyle: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: "rgba(0,0,0,0.5)",
-          },
+        label: {
+          formatter: "{b}: {c}",
+          color: "#FFFFFF",
+          fontFamily: "IRANSans",
+          fontSize: 14,
         },
-        label: { formatter: "{b}: {c}" },
         itemStyle: {
           color: (params: PieColorParams) =>
             PIECOLORS[params.dataIndex % PIECOLORS.length],
@@ -74,7 +88,7 @@ export const Charts = ({ dates, counts, pieData }: Props) => {
     <div className="flex flex-col gap-6 items-center">
       <EChartsReact option={barOption} style={{ width: 800, height: 400 }} />
       <EChartsReact option={lineOption} style={{ width: 800, height: 400 }} />
-      <EChartsReact option={pieOption} style={{ width: 400, height: 400 }} />
+      <EChartsReact option={pieOption} style={{ width: 600, height: 400 }} />
     </div>
   );
 };

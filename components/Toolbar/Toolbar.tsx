@@ -52,9 +52,9 @@ export const Toolbar = ({
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="week">Week</SelectItem>
-          <SelectItem value="month">Month</SelectItem>
-          <SelectItem value="year">Year</SelectItem>
+          <SelectItem value="week">هفته</SelectItem>
+          <SelectItem value="month">ماه</SelectItem>
+          <SelectItem value="year">سال</SelectItem>
         </SelectContent>
       </Select>
 
@@ -102,7 +102,7 @@ export const Toolbar = ({
       >
         <ChevronLeft />
       </Button>
-      <Button onClick={() => fetch(startDate, endDate)}>Fetch</Button>
+      <Button onClick={() => fetch(startDate, endDate)}>بروزرسانی</Button>
     </div>
   );
 };
