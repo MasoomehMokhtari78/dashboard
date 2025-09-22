@@ -1,5 +1,12 @@
 "use client";
 
+const titleMap = {
+  Dashboard: "تراکنش ها",
+  Transactions: "تراکنش ها",
+  Users: "کاربران",
+  Reports: "گزارشات سیستمی",
+};
+
 import { useSelectedLayoutSegments } from "next/navigation";
 import React, { ReactNode } from "react";
 
@@ -14,7 +21,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="w-full h-screen">
       <div className="flex flex-col items-center justify-center p-6 gap-6 h-full min-h-fit">
-        <h1 className="text-2xl font-bold">{title}</h1>
+        <h1 className="text-2xl font-bold">{titleMap[title] || "داشبورد"}</h1>
         {children}
       </div>
     </div>

@@ -27,13 +27,29 @@ export const Transactions = () => {
             value: mode,
             setValue: setMode,
             options: [
-              { label: "Max", value: "max" },
-              { label: "Total", value: "total" },
+              { label: "بیشترین مبلغ", value: "max" },
+              { label: "جمع مبالغ", value: "total" },
             ],
           },
         ]}
       />
-      {transactions?.length ? <Charts {...chartData} /> : <>Loading</>}
+      {transactions?.length ? (
+        <Charts
+          {...chartData}
+          titles={{
+            bar: "مقدار تراکنش در روز",
+            line: "مقدار تراکنش در روز",
+            pie: "وضعیت تراکنش",
+          }}
+          persianLabels={{
+            pending: "در انتظار تایید",
+            failed: "ناموفق",
+            verified: "موفق",
+          }}
+        />
+      ) : (
+        <>Loading</>
+      )}
     </>
   );
 };
