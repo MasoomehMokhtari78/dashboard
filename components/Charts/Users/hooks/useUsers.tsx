@@ -25,7 +25,7 @@ export const useUsers = () => {
 
   const fetchUsers = useCallback(async (start: string, end: string) => {
     const cacheKey = `users_${start}_${end}`;
-    const cached = await getCachedData("users", cacheKey);
+    const cached = await getCachedData<{ data: UserData[] }>("users", cacheKey);
     if (cached) {
       setUsers(cached.data);
     } else {
@@ -44,7 +44,7 @@ export const useUsers = () => {
       format(new Date(), "yyyy-MM-dd"),
       format(subDays(new Date(), -30), "yyyy-MM-dd")
     );
-  }, []);
+  }, [fetchUsers]);
   return {
     users,
     toolbarOptions,

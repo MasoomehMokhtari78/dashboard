@@ -12,7 +12,7 @@ export default function DocumentsForm() {
       enableReinitialize
       initialValues={{ userImage: data.userImage || "" }}
       validate={(values) => {
-        const errors: any = {};
+        const errors: { userImage?: string } = {};
         if (!values.userImage) errors.userImage = "آپلود فایل الزامی است";
         return errors;
       }}
@@ -46,7 +46,9 @@ export default function DocumentsForm() {
                     reader.readAsDataURL(file);
                   }}
                 />
+
                 {values.userImage && (
+                  /* eslint-disable-next-line @next/next/no-img-element */
                   <img
                     src={values.userImage}
                     alt="Preview"

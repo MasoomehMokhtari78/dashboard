@@ -11,7 +11,7 @@ type FormData = {
 
 type MultiStepFormContextType = {
   data: FormData;
-  setField: (key: keyof FormData, value: any) => void;
+  setField: (key: keyof FormData, value: string | string[]) => void;
   setFields: (values: Partial<FormData>) => void;
   nextStep: () => void;
   prevStep: () => void;
@@ -59,7 +59,7 @@ export const MultiStepFormProvider = ({
     }
   }, [data]);
 
-  const setField = (key: keyof FormData, value: any) => {
+  const setField = (key: keyof FormData, value: string | string[]) => {
     setData((prev) => ({ ...prev, [key]: value }));
   };
 

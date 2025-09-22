@@ -21,7 +21,10 @@ export const useTransactions = () => {
 
   const fetchTransactions = useCallback(async (start: string, end: string) => {
     const cacheKey = `transactions_${start}_${end}`;
-    const cached = await getCachedData("transactions", cacheKey);
+    const cached = await getCachedData<{ data: TransactionType }>(
+      "transactions",
+      cacheKey
+    );
     if (cached) {
       setTransactions(cached.data);
     } else {
@@ -41,7 +44,7 @@ export const useTransactions = () => {
       format(new Date(), "yyyy-MM-dd"),
       format(subDays(new Date(), -30), "yyyy-MM-dd")
     );
-  }, []);
+  }, [fetchTransactions]);
 
   return {
     transactions,

@@ -11,15 +11,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Input } from "../ui/Input";
 import { format } from "date-fns";
 import { StepType } from "./useToolbar";
-
-type FilterOption = { label: string; value: string };
-
-type FilterConfig = {
-  name: string;
-  value: string;
-  setValue: React.Dispatch<React.SetStateAction<FilterOption[]>>;
-  options: FilterOption[];
-};
+import { FilterConfig } from "@/types";
 
 type Props = {
   step: StepType;
@@ -30,7 +22,8 @@ type Props = {
   endDate: string;
   setEndDate: React.Dispatch<React.SetStateAction<string>>;
   fetch: (start?: string, end?: string) => Promise<void>;
-  filters?: FilterConfig[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  filters?: FilterConfig<any>[];
 };
 
 export const Toolbar = ({

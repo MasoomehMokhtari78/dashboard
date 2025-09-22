@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/navigation";
 import Image from "next/image";
 
-const titleMap = {
+const titleMap: Record<string, string> = {
   Dashboard: "تراکنش ها",
   Transactions: "تراکنش ها",
   Users: "کاربران",

@@ -32,3 +32,12 @@ export type PieColorParams = {
   name?: string;
   value?: number;
 };
+
+type FilterOption<T extends string = string> = { label: string; value: T };
+
+export type FilterConfig<T extends string = string> = {
+  name: string;
+  value: T;
+  setValue: React.Dispatch<React.SetStateAction<T>>;
+  options: FilterOption<T>[];
+};

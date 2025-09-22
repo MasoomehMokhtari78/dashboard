@@ -25,22 +25,28 @@ export async function openDB() {
 
 export type StoreName = "transactions" | "users" | "systemReports";
 
-export async function getCachedData(storeName: StoreName, key: string) {
+export async function getCachedData<T>(
+  storeName: StoreName,
+  key: string
+): Promise<T | undefined> {
   const db = await openDB();
-  return new Promise<any>((resolve, reject) => {
+  return new Promise<T | undefined>((resolve, reject) => {
     const tx = db.transaction(storeName, "readonly");
     const store = tx.objectStore(storeName);
     const req = store.get(key);
-    req.onsuccess = () => resolve(req.result);
+    req.onsuccess = () => {
+      if (req.result) resolve(req.result.data as T);
+      else resolve(undefined);
+    };
     req.onerror = () => reject(req.error);
   });
 }
 
-export async function setCachedData(
+export async function setCachedData<T>(
   storeName: StoreName,
   key: string,
-  data: any
-) {
+  data: T
+): Promise<void> {
   const db = await openDB();
   return new Promise<void>((resolve, reject) => {
     const tx = db.transaction(storeName, "readwrite");
