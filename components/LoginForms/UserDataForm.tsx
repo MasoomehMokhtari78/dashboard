@@ -53,8 +53,8 @@ export default function UserDataForm() {
           errors.lastName = "نام خانوادگی باید فقط شامل حروف فارسی باشد";
         }
 
-        if (!values.addresses || !values.addresses.length) {
-          errors.addresses = ["حداقل یک آدرس لازم است"];
+        if (!values.addresses || values.addresses.length === 0) {
+          errors.addresses = "حداقل یک آدرس لازم است";
         } else {
           const addrErrors = values.addresses.map((addr) => {
             if (!addr) return "آدرس الزامی است";
@@ -106,6 +106,11 @@ export default function UserDataForm() {
             <FieldArray name="addresses">
               {({ push, remove }) => (
                 <div className="flex flex-col gap-3">
+                  {typeof errors.addresses === "string" && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.addresses}
+                    </p>
+                  )}
                   {values.addresses.map((_, i) => (
                     <div key={i} className="flex flex-col gap-1">
                       <div className="flex gap-2 items-center">
