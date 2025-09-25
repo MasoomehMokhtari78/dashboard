@@ -13,10 +13,10 @@ import {
 import Image from "next/image";
 
 const titleMap: Record<string, string> = {
-  Dashboard: "تراکنش ها",
-  Transactions: "تراکنش ها",
-  Users: "کاربران",
-  Reports: "گزارشات سیستمی",
+  Dashboard: "Transactions",
+  Transactions: "Transactions",
+  Users: "Users",
+  Reports: "System Reports",
 };
 
 export default function Layout({ children }: { children: ReactNode }) {
@@ -30,27 +30,30 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="w-full h-screen flex flex-col">
       <header className="p-6 border-b border-gray-200 dark:border-gray-800 flex justify-between">
-        <Image src="/vercel.svg" height={40} width={40} alt="logo" />
+        <div className="flex gap-2 items-end">
+          <Image src="/vercel.svg" height={40} width={40} alt="logo" />{" "}
+          <h1 className="text-2xl font-bold">Panel</h1>
+        </div>
         <NavigationMenu>
-          <NavigationMenuList className="flex-row-reverse">
+          <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
-                <Link href="/dashboard">داشبورد</Link>
+                <Link href="/dashboard">Dashboard</Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
-                <Link href="/dashboard/transactions">تراکنش ها</Link>
+                <Link href="/dashboard/transactions">Transactions</Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
-                <Link href="/dashboard/users">کاربران</Link>
+                <Link href="/dashboard/users">Users</Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
-                <Link href="/dashboard/reports">گزارشات</Link>
+                <Link href="/dashboard/reports">System Reports</Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>

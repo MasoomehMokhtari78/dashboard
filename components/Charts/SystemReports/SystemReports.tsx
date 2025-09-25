@@ -33,14 +33,14 @@ export const SystemReports = () => {
 
       <Charts
         {...chartData}
-        titles={{ bar: "درخواست", line: "درخواست", pie: "وضعیت درخواست" }}
+        titles={{ bar: "Requests", line: "Requests", pie: "Request status" }}
         persianLabels={{
-          "payment - fail": "پرداخت ناموفق",
-          "payment - success": "پرداخت موفق",
-          "login - fail": "ورود ناموفق",
-          "login - success": "ورود موفق",
-          "fetchData - fail": "درخواست داده ناموفق",
-          "fetchData - success": "درخواست داده موفق",
+          "payment - fail": "payment - fail",
+          "payment - success": "payment - success",
+          "login - fail": "login - fail",
+          "login - success": "login - success",
+          "fetchData - fail": "fetchData - fail",
+          "fetchData - success": "fetchData - success",
         }}
       />
     </>

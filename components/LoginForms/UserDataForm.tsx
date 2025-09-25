@@ -38,27 +38,27 @@ export default function UserDataForm() {
         const errors: FormikErrors<FormValues> = {};
 
         if (!values.firstName) {
-          errors.firstName = "نام الزامی است";
+          errors.firstName = "First name is required";
         } else if (values.firstName.length < 3) {
-          errors.firstName = "نام باید حداقل ۳ کاراکتر باشد";
-        } else if (!/^[\u0600-\u06FF\s]+$/.test(values.firstName)) {
-          errors.firstName = "نام باید فقط شامل حروف فارسی باشد";
+          errors.firstName = "First name must be at least 3 characters";
+        } else if (!/^[a-zA-Z\s]+$/.test(values.firstName)) {
+          errors.firstName = "First name must only contain English letters";
         }
 
         if (!values.lastName) {
-          errors.lastName = "نام خانوادگی الزامی است";
+          errors.lastName = "Last name is required";
         } else if (values.lastName.length < 3) {
-          errors.lastName = "نام خانوادگی باید حداقل ۳ کاراکتر باشد";
-        } else if (!/^[\u0600-\u06FF\s]+$/.test(values.lastName)) {
-          errors.lastName = "نام خانوادگی باید فقط شامل حروف فارسی باشد";
+          errors.lastName = "Last name must be at least 3 characters";
+        } else if (!/^[a-zA-Z\s]+$/.test(values.lastName)) {
+          errors.lastName = "Last name must only contain English letters";
         }
 
         if (!values.addresses || values.addresses.length === 0) {
-          errors.addresses = "حداقل یک آدرس لازم است";
+          errors.addresses = "At least one address is required";
         } else {
           const addrErrors = values.addresses.map((addr) => {
-            if (!addr) return "آدرس الزامی است";
-            if (addr.length < 5) return "آدرس باید حداقل ۵ کاراکتر باشد";
+            if (!addr) return "Address is required";
+            if (addr.length < 5) return "Address must be at least 5 characters";
             return undefined;
           });
           const filteredErrors = addrErrors.filter((e) => e !== undefined);
@@ -78,10 +78,10 @@ export default function UserDataForm() {
       {({ values, errors, touched }) => (
         <Form className="grid grid-cols-1 md:grid-cols-2 gap-2">
           <div className="flex flex-col gap-1">
-            <label className="font-bold">نام</label>
+            <label className="font-bold">First Name</label>
             <Field name="firstName">
               {({ field }: FieldProps<string>) => (
-                <CustomInput {...field} placeholder="نام" />
+                <CustomInput {...field} placeholder="First Name" />
               )}
             </Field>
             {errors.firstName && touched.firstName && (
@@ -90,10 +90,10 @@ export default function UserDataForm() {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="font-medium">نام خانوادگی</label>
+            <label className="font-medium">Last Name</label>
             <Field name="lastName">
               {({ field }: FieldProps<string>) => (
-                <CustomInput {...field} placeholder="نام خانوادگی" />
+                <CustomInput {...field} placeholder="Last Name" />
               )}
             </Field>
             {errors.lastName && touched.lastName && (
@@ -102,7 +102,7 @@ export default function UserDataForm() {
           </div>
 
           <div className="col-span-1 md:col-span-2 flex flex-col gap-2">
-            <label className="font-medium">آدرس‌ها</label>
+            <label className="font-medium">Addresses</label>
             <FieldArray name="addresses">
               {({ push, remove }) => (
                 <div className="flex flex-col gap-3">
@@ -118,7 +118,7 @@ export default function UserDataForm() {
                           {({ field }: FieldProps<string>) => (
                             <CustomInput
                               {...field}
-                              placeholder={`آدرس ${i + 1}`}
+                              placeholder={`Address ${i + 1}`}
                             />
                           )}
                         </Field>
@@ -151,17 +151,16 @@ export default function UserDataForm() {
                     onClick={() => push("")}
                   >
                     <LucidePlus />
-                    افزودن آدرس
+                    Add Address
                   </Button>
                 </div>
               )}
             </FieldArray>
           </div>
 
-          {/* Submit */}
           <div className="col-span-1 md:col-span-2 mt-6">
             <Button type="submit" className="w-full">
-              ثبت و مرحله بعد
+              Save & Next Step
             </Button>
           </div>
         </Form>

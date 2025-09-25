@@ -50,10 +50,10 @@ export const useReports = () => {
     value: typeFilter,
     setValue: setTypeFilter,
     options: [
-      { label: "همه", value: "all" },
-      { label: "ورود", value: "login" },
-      { label: "پرداخت", value: "payment" },
-      { label: "درخواست داده", value: "fetchData" },
+      { label: "All", value: "all" },
+      { label: "Login", value: "login" },
+      { label: "Payment", value: "payment" },
+      { label: "Fetch Data", value: "fetchData" },
     ],
   };
   const statusOptions: FilterConfig<RequestStatus | "all"> = {
@@ -61,9 +61,9 @@ export const useReports = () => {
     value: statusFilter,
     setValue: setStatusFilter,
     options: [
-      { label: "همه", value: "all" },
-      { label: "موفق", value: "success" },
-      { label: "ناموفق", value: "fail" },
+      { label: "All", value: "all" },
+      { label: "Successful", value: "success" },
+      { label: "Unsuccessful", value: "fail" },
     ],
   };
   const filters = [statusOptions, typeOptions];

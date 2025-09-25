@@ -13,16 +13,16 @@ import Link from "next/link";
 
 const stepMap: Record<number, { label: string; desc: string }> = {
   1: {
-    label: "اطلاعات اولیه",
-    desc: "خوش آمدید! لطفا برای ورود به داشبورد اطلاعات زیر را تکمیل کنید.",
+    label: "Basic Information",
+    desc: "Welcome! Please complete the following information to access the dashboard.",
   },
   2: {
-    label: "بارگذاری تصویر",
-    desc: "لطفا تصویر پروفایل خود را در باکس زیر آپلود کنید.",
+    label: "Upload Profile Image",
+    desc: "Please upload your profile picture in the box below.",
   },
   3: {
-    label: "فرم با موفقیت تکلمیل شد",
-    desc: "کاربر گرامی، اطلاعات شما با موفقیت ثبت شد.",
+    label: "Form Completed Successfully",
+    desc: "Dear user, your information has been successfully submitted.",
   },
 };
 
@@ -82,10 +82,10 @@ function StepRenderer() {
                   className="flex flex-col gap-2"
                 >
                   <Link href="/dashboard" className="w-full">
-                    <Button className="w-full">ورود به داشبورد</Button>
+                    <Button className="w-full">Go to Dashboard</Button>
                   </Link>
                   <Button variant="outline" onClick={prevStep}>
-                    بازگشت به مرحله قبل
+                    Back to Previous Step
                   </Button>
                 </motion.div>
               )}

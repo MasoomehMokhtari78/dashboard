@@ -28,8 +28,8 @@ export const Transactions = () => {
             value: mode,
             setValue: setMode,
             options: [
-              { label: "بیشترین مبلغ", value: "max" },
-              { label: "جمع مبالغ", value: "total" },
+              { label: "Max", value: "max" },
+              { label: "Total", value: "total" },
             ],
           },
         ]}
@@ -38,14 +38,14 @@ export const Transactions = () => {
       <Charts
         {...chartData}
         titles={{
-          bar: "مقدار تراکنش در روز",
-          line: "مقدار تراکنش در روز",
-          pie: "وضعیت تراکنش",
+          bar: "Transactions per day",
+          line: "Transactions per day",
+          pie: "Transaction Status",
         }}
         persianLabels={{
-          pending: "در انتظار تایید",
-          failed: "ناموفق",
-          verified: "موفق",
+          pending: "Pending",
+          failed: "Failed",
+          verified: "Verified",
         }}
       />
     </>

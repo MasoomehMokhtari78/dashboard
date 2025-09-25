@@ -61,7 +61,7 @@ export const Charts = ({
         color: "#FFFFFF",
         fontSize: 12,
         fontWeight: "bold",
-        fontFamily: "IranSans",
+        // fontFamily: "IranSans",
       },
     },
     series: [
@@ -73,7 +73,7 @@ export const Charts = ({
         label: {
           formatter: "{b}: {c}",
           color: "#FFFFFF",
-          fontFamily: "IRANSans",
+          // fontFamily: "IRANSans",
           fontSize: 14,
         },
         itemStyle: {
