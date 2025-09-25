@@ -75,7 +75,7 @@ export const Toolbar = ({
         className="px-2 py-1"
         variant="outline"
       >
-        <ChevronRight />
+        <ChevronLeft />
       </Button>
       <Input
         type="date"
@@ -93,7 +93,7 @@ export const Toolbar = ({
         variant="outline"
         disabled={endDate === format(today, "yyyy-MM-dd")}
       >
-        <ChevronLeft />
+        <ChevronRight />
       </Button>
       <Button onClick={() => fetch(startDate, endDate)}>Fetch</Button>
     </div>
