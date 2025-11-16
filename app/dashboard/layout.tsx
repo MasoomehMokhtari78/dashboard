@@ -27,9 +27,10 @@ export default function Layout({ children }: { children: ReactNode }) {
   const title =
     lastSegment.charAt(0).toUpperCase() +
     lastSegment.slice(1).replace(/-/g, " ");
-  const allowed = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const allowed = useAuth();
+  if (allowed === null) return null;
   if (!allowed) return null;
 
   const logout = () => {
