@@ -85,10 +85,19 @@ export const Charts = ({
   };
 
   return (
-    <div className="flex flex-col gap-6 items-center">
-      <EChartsReact option={barOption} style={{ width: 800, height: 400 }} />
-      <EChartsReact option={lineOption} style={{ width: 800, height: 400 }} />
-      <EChartsReact option={pieOption} style={{ width: 600, height: 400 }} />
+    <div className="flex flex-col gap-6 items-center w-full">
+      <EChartsReact
+        option={barOption}
+        style={{ width: "100%", maxWidth: "800px", height: 400 }}
+      />
+      <EChartsReact
+        option={lineOption}
+        style={{ width: "100%", maxWidth: "800px", height: 400 }}
+      />
+      <EChartsReact
+        option={pieOption}
+        style={{ width: "100%", maxWidth: "800px", height: 400 }}
+      />
     </div>
   );
 };

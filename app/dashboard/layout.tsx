@@ -12,6 +12,7 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
 } from "@/components/ui/navigation";
+import { Button } from "@/components/ui/Button";
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard" },
@@ -31,9 +32,9 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   if (!allowed) return null;
 
-  const hamburgerVariants = {
-    closed: { rotate: 0 },
-    open: { rotate: 45 },
+  const logout = () => {
+    localStorage.removeItem("multiStepFormData");
+    window.location.href = "/";
   };
 
   return (
@@ -56,6 +57,9 @@ export default function Layout({ children }: { children: ReactNode }) {
               ))}
             </NavigationMenuList>
           </NavigationMenu>
+          <Button variant="outline" onClick={logout}>
+            Logout
+          </Button>
         </nav>
 
         <button
@@ -102,6 +106,9 @@ export default function Layout({ children }: { children: ReactNode }) {
                 ))}
               </NavigationMenuList>
             </NavigationMenu>
+            <Button variant="outline" onClick={logout}>
+              Logout
+            </Button>
           </motion.div>
         )}
       </header>
