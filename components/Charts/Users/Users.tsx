@@ -24,15 +24,15 @@ export const Users = () => {
         fetch={() => fetchUsers(startDate, endDate)}
         filters={[
           {
-            name: " وضعیت",
+            name: " Status",
             value: statusFilter,
             setValue: setStatusFilter,
             options: [
-              { label: "همه", value: "all" },
-              { label: "فعال", value: "active" },
-              { label: "در انتظار تایید", value: "pending" },
-              { label: "غیرفعال", value: "inactive" },
-              { label: "مسدود شده", value: "suspended" },
+              { label: "All", value: "all" },
+              { label: "Active", value: "active" },
+              { label: "Pending", value: "pending" },
+              { label: "Inactive", value: "inactive" },
+              { label: "Suspended", value: "suspended" },
             ],
           },
         ]}
@@ -40,12 +40,12 @@ export const Users = () => {
 
       <Charts
         {...chartData}
-        titles={{ bar: "کاربر جدید", line: "کاربر جدید", pie: "وضعیت" }}
+        titles={{ bar: "New Users", line: "New Users", pie: "Status" }}
         persianLabels={{
-          active: "فعال",
-          inactive: "غیرفعال",
-          pending: "در انتظار تایید",
-          suspended: "مسدود شده",
+          active: "Active",
+          inactive: "Inactive",
+          pending: "Pending",
+          suspended: "Suspended",
         }}
       />
     </>

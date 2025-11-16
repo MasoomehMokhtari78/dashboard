@@ -1,20 +1,13 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+import { ContactSection } from "@/components/Landing/ContactUs";
+import { FeaturesSection } from "@/components/Landing/Features";
+import { HeroSection } from "@/components/Landing/HeroSection";
 
-export default function Home() {
+export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center h-screen gap-6">
-      <Link href="/login" passHref>
-        <Button asChild>
-          <span>مشاهده تسک 1</span>
-        </Button>
-      </Link>
-
-      <Link href="/dashboard" passHref>
-        <Button asChild>
-          <span>مشاهده تسک 2</span>
-        </Button>
-      </Link>
-    </div>
+    <>
+      <HeroSection />
+      <FeaturesSection />
+      <ContactSection />
+    </>
   );
 }

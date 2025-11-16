@@ -15,15 +15,15 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --font-iransans: "IranSans";
-  font-family: "IRANSans" !important;
-  direction: rtl;
+  /* --font-iransans: "IranSans";
+  font-family: "IRANSans" !important; */
+  /* direction: rtl; */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-iransans);
+  /* --font-sans: var(--font-iransans); */
   --font-mono: var(--font-geist-mono);
 }
 

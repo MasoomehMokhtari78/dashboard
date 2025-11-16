@@ -45,9 +45,9 @@ export const Toolbar = ({
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="week">هفته</SelectItem>
-          <SelectItem value="month">ماه</SelectItem>
-          <SelectItem value="year">سال</SelectItem>
+          <SelectItem value="week">Week</SelectItem>
+          <SelectItem value="month">Month</SelectItem>
+          <SelectItem value="year">Year</SelectItem>
         </SelectContent>
       </Select>
 
@@ -75,7 +75,7 @@ export const Toolbar = ({
         className="px-2 py-1"
         variant="outline"
       >
-        <ChevronRight />
+        <ChevronLeft />
       </Button>
       <Input
         type="date"
@@ -93,9 +93,9 @@ export const Toolbar = ({
         variant="outline"
         disabled={endDate === format(today, "yyyy-MM-dd")}
       >
-        <ChevronLeft />
+        <ChevronRight />
       </Button>
-      <Button onClick={() => fetch(startDate, endDate)}>بروزرسانی</Button>
+      <Button onClick={() => fetch(startDate, endDate)}>Fetch</Button>
     </div>
   );
 };

@@ -13,7 +13,7 @@ export default function DocumentsForm() {
       initialValues={{ userImage: data.userImage || "" }}
       validate={(values) => {
         const errors: { userImage?: string } = {};
-        if (!values.userImage) errors.userImage = "آپلود فایل الزامی است";
+        if (!values.userImage) errors.userImage = "File upload is required";
         return errors;
       }}
       onSubmit={(values) => {
@@ -29,9 +29,7 @@ export default function DocumentsForm() {
                 className="w-full h-40 border-2 border-dashed rounded-xl flex items-center justify-center cursor-pointer relative"
                 onClick={() => document.getElementById("fileInput")?.click()}
               >
-                {!values.userImage && (
-                  <span>کلیک کنید و تصویر را انتخاب کنید</span>
-                )}
+                {!values.userImage && <span>Click to select an image</span>}
                 <input
                   id="fileInput"
                   type="file"
@@ -69,10 +67,10 @@ export default function DocumentsForm() {
               onClick={prevStep}
               className="flex-1"
             >
-              مرحله قبل
+              Previous Step
             </Button>
             <Button type="submit" className="flex-1">
-              ثبت و ادامه
+              Save & Continue
             </Button>
           </div>
         </Form>
