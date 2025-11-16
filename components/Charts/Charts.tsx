@@ -85,7 +85,7 @@ export const Charts = ({
   };
 
   return (
-    <div className="flex flex-col gap-6 items-center">
+    <div className="flex flex-col gap-6 items-center w-full">
       <EChartsReact
         option={barOption}
         style={{ width: "100%", maxWidth: "800px", height: 400 }}
