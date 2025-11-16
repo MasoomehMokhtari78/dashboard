@@ -39,9 +39,9 @@ export const Toolbar = ({
 }: Props) => {
   const today = new Date();
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-2 items-center flex-wrap justify-center flex-col md:flex-row">
       <Select value={step} onValueChange={(val) => setStep(val as StepType)}>
-        <SelectTrigger className="w-[120px]">
+        <SelectTrigger className="w-[300px] md:w-fit">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -57,7 +57,7 @@ export const Toolbar = ({
           value={filter.value}
           onValueChange={(v) => filter.setValue(v)}
         >
-          <SelectTrigger className="w-[140px]">
+          <SelectTrigger className="w-[300px] md:w-fit">
             <SelectValue placeholder={`Filter by ${filter.name}`} />
           </SelectTrigger>
           <SelectContent>
@@ -69,33 +69,36 @@ export const Toolbar = ({
           </SelectContent>
         </Select>
       ))}
-
-      <Button
-        onClick={() => shift("back")}
-        className="px-2 py-1"
-        variant="outline"
-      >
-        <ChevronLeft />
-      </Button>
-      <Input
-        type="date"
-        value={startDate}
-        onChange={(e) => setStartDate(e.target.value)}
-      />
-      <Input
-        type="date"
-        value={endDate}
-        onChange={(e) => setEndDate(e.target.value)}
-      />
-      <Button
-        onClick={() => shift("forward")}
-        className="px-2 py-1"
-        variant="outline"
-        disabled={endDate === format(today, "yyyy-MM-dd")}
-      >
-        <ChevronRight />
-      </Button>
-      <Button onClick={() => fetch(startDate, endDate)}>Fetch</Button>
+      <div className="flex gap-2 flex-wrap flex-col md:flex-row">
+        <Button
+          onClick={() => shift("back")}
+          className="px-2 py-1 hidden md:block"
+          variant="outline"
+        >
+          <ChevronLeft />
+        </Button>
+        <Input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          className="w-[300px] md:w-fit"
+        />
+        <Input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          className="w-[300px] md:w-fit"
+        />
+        <Button
+          onClick={() => shift("forward")}
+          className="px-2 py-1 hidden md:block"
+          variant="outline"
+          disabled={endDate === format(today, "yyyy-MM-dd")}
+        >
+          <ChevronRight />
+        </Button>
+        <Button onClick={() => fetch(startDate, endDate)}>Fetch</Button>
+      </div>
     </div>
   );
 };
