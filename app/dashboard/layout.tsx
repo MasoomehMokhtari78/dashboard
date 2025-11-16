@@ -11,6 +11,7 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation";
 import Image from "next/image";
+import { useAuth } from "./useAuth";
 
 const titleMap: Record<string, string> = {
   Dashboard: "Transactions",
@@ -26,6 +27,9 @@ export default function Layout({ children }: { children: ReactNode }) {
   const title =
     lastSegment.charAt(0).toUpperCase() +
     lastSegment.slice(1).replace(/-/g, " ");
+
+  const allowed = useAuth();
+  if (!allowed) return null;
 
   return (
     <div className="w-full h-screen flex flex-col">
